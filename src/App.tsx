@@ -119,7 +119,7 @@ function App() {
       isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
       
       // Résultat net après IS
-      resultatNetAvecScop = resultatFiscal - isAvecScop;
+      resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
       
       // Calcul de la nouvelle déduction participation basée sur le résultat net
       const nouvelleDeductionParticipation = resultatNetAvecScop * tauxParticipation;
