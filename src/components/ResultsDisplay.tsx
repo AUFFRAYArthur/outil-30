@@ -102,6 +102,11 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF })
             <ResultRow label="Base imposable à l'IS" sansScopValue={sansScop.baseImposable} avecScopValue={avecScop.baseImposable} isBold />
             <ResultRow label="Impôt sur les Sociétés (IS)" sansScopValue={sansScop.is} avecScopValue={avecScop.is} isNegative />
             
+            <tr className="bg-gray-100 font-bold">
+              <td className="py-3 px-4 text-sm text-gray-800">Coût Fiscal Total</td>
+              <td className="py-3 px-4 text-sm text-red-700 text-right">{formatCurrency(sansScop.coutFiscalTotal)}</td>
+              <td className="py-3 px-4 text-sm text-green-700 text-right">{formatCurrency(avecScop.coutFiscalTotal)}</td>
+            </tr>
             <tr className="bg-blue-50 font-bold text-blue-800">
               <td className="py-4 px-4 text-md">Résultat Net Après Impôts</td>
               <td className="py-4 px-4 text-md text-right">{formatCurrency(sansScop.resultatNet)}</td>
