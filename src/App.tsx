@@ -102,82 +102,33 @@ function App() {
     const tauxReserves = pourcentageReserves / 100;
     const tauxDividendes = inputs.pourcentageDividendes / 100;
     
-    // Algorithme itératif pour convergence
-    let iteration = 0;
-    const maxIterations = 50;
-    const tolerance = 0.01; // Tolérance de convergence en euros
+    // Calcul direct avec équivalence Déduction Participation = Participation Salariés
+    // Formule: P = (RF + CET - R × min(r, p)) × p / (1 + p × t)
+    // où P = participation, RF = résultat fiscal, R = base, r = taux réserves, p = taux participation, t = taux IS
     
-    // Variables de l'itération
-    let baseImposable = baseInitiale;
-    let deductionParticipation = 0;
-    let deductionReserves = 0;
-    let isCalcule = 0;
-    let resultatNet = 0;
-    let montantParticipation = 0;
-    let montantReserves = 0;
-    let montantDividendes = 0;
+    const deductionReservesTheorique = baseInitiale * tauxReserves;
+    const deductionReservesPlafonnee = Math.min(deductionReservesTheorique, baseInitiale * tauxParticipation);
     
-    // Variables de convergence
-    let participationPrecedente = 0;
-    let converge = false;
+    // Calcul de la participation avec équivalence garantie
+    const denominateur = 1 + tauxParticipation * tauxISDecimal;
+    const numerateur = (resultatFiscal + cet - deductionReservesPlafonnee) * tauxParticipation;
+    const montantParticipation = numerateur / denominateur;
     
-    while (!converge && iteration < maxIterations) {
-      iteration++;
-      
-      // Étape 1: Calcul des déductions fiscales sur la base imposable courante
-      deductionParticipation = baseImposable * tauxParticipation;
-      
-      // Contrainte: Déduction réserves plafonnée à la déduction participation
-      const deductionReservesTheorique = baseImposable * tauxReserves;
-      deductionReserves = Math.min(deductionReservesTheorique, deductionParticipation);
-      
-      // Étape 2: Calcul de la base imposable après déductions
-      const baseImposableApresDeductions = baseImposable - deductionParticipation - deductionReserves;
-      
-      // Étape 3: Calcul de l'IS
-      isCalcule = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
-      
-      // Étape 4: Calcul du résultat net après IS (sans CET pour SCOP)
-      resultatNet = resultatFiscal - isCalcule;
-      
-      // Étape 5: Répartition du résultat net
-      const nouveauMontantParticipation = resultatNet * tauxParticipation;
-      montantReserves = resultatNet * tauxReserves;
-      montantDividendes = resultatNet * tauxDividendes;
-      
-      // Test de convergence: Participation salariés = Déduction Participation
-      const ecartParticipation = Math.abs(nouveauMontantParticipation - deductionParticipation);
-      
-      if (ecartParticipation <= tolerance) {
-        converge = true;
-        montantParticipation = nouveauMontantParticipation;
-      } else {
-        // Ajustement pour la prochaine itération
-        // Méthode de point fixe avec amortissement pour stabilité
-        const facteurAmortissement = 0.7;
-        const ajustement = (nouveauMontantParticipation - deductionParticipation) * facteurAmortissement;
-        baseImposable = baseInitiale + ajustement;
-        
-        // Sauvegarde pour vérification de convergence
-        participationPrecedente = nouveauMontantParticipation;
-      }
-    }
+    // Déduction Participation = Participation Salariés (équivalence exacte)
+    const deductionParticipation = montantParticipation;
     
-    // Gestion des cas de non-convergence
-    if (!converge) {
-      console.warn(`Algorithme n'a pas convergé après ${maxIterations} itérations`);
-      // Utilisation des dernières valeurs calculées
-      montantParticipation = resultatNet * tauxParticipation;
-    }
+    // Recalcul de la déduction réserves avec la nouvelle base
+    const baseImposableAvantDeductions = baseInitiale;
+    const deductionReserves = Math.min(baseImposableAvantDeductions * tauxReserves, deductionParticipation);
     
-    // Recalcul final avec les valeurs convergées
-    const baseImposableFinale = baseInitiale;
-    const baseImposableAvecScop = baseImposableFinale - deductionParticipation - deductionReserves;
+    // Calcul de l'IS
+    const baseImposableAvecScop = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
     const isAvecScop = Math.max(0, baseImposableAvecScop * tauxISDecimal);
-    const resultatNetAvecScop = resultatFiscal - isAvecScop;
     
-    // Vérification finale des contraintes
-    const montantParticipationFinal = resultatNetAvecScop * tauxParticipation;
+    // Résultat net après IS (contrainte respectée)
+    const resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
+    
+    // Répartition du résultat net
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
     const montantDividendesFinal = resultatNetAvecScop * tauxDividendes;
     
@@ -185,8 +136,8 @@ function App() {
 
     const avecScop = {
       resultatFiscal,
-      baseImposableAvantDeductions: baseImposableFinale,
-      montantParticipation: montantParticipationFinal,
+      baseImposableAvantDeductions: baseImposableAvantDeductions,
+      montantParticipation: montantParticipation,
       montantReserves: montantReservesFinal,
       montantDividendes: montantDividendesFinal,
       deductionParticipation,
@@ -196,8 +147,6 @@ function App() {
       cet: 0,
       coutFiscalTotal: coutFiscalTotalAvecScop,
       resultatNet: resultatNetAvecScop,
-      iterations: iteration,
-      converge: converge
     };
 
     // Économies
