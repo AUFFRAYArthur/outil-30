@@ -155,6 +155,7 @@ function App() {
             <h1 className="text-2xl font-bold text-gray-800">Simulateur d'Avantages Fiscaux SCOP</h1>
             <p className="text-sm text-gray-500">Évaluez l'impact du statut SCOP sur la rentabilité de votre entreprise.</p>
           </div>
+          </div>
           
           <div className="flex items-center space-x-4 relative">
             {/* Bouton Notice */}
@@ -217,7 +218,7 @@ function App() {
           </div>
           <div className="lg:col-span-3 space-y-8" ref={resultsRef}>
             <ResultsDisplay results={results} />
-            {}
+            <ChartDisplay results={results} />
           </div>
         </div>
       </main>
