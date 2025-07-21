@@ -152,8 +152,8 @@ function App() {
         <div className="container mx-auto px-4 py-4 flex items-center space-x-3">
           <div className="flex items-center space-x-3 flex-1">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Simulateur d'Avantages Fiscaux SCOP</h1>
-            <p className="text-base text-gray-500">Évaluez l'impact du statut SCOP sur la rentabilité de votre entreprise.</p>
+            <h1 className="text-4xl font-bold text-gray-800">Simulateur d'Avantages Fiscaux SCOP</h1>
+            <p className="text-lg text-gray-500">Évaluez l'impact du statut SCOP sur la rentabilité de votre entreprise.</p>
           </div>
           </div>
           
@@ -169,15 +169,15 @@ function App() {
               </button>
               
               {showNotice && (
-                <div className="absolute top-full right-0 mt-2 w-[28rem] bg-white border border-gray-200 rounded-lg shadow-lg p-5 z-50">
+                <div className="absolute top-full right-0 mt-2 w-[32rem] bg-white border border-gray-200 rounded-lg shadow-lg p-6 z-50">
                   <button
                     onClick={() => setShowNotice(false)}
                     className="absolute top-2 left-2 text-gray-400 hover:text-gray-600"
                   >
                     <X className="h-4 w-4" />
                   </button>
-                  <h3 className="font-semibold text-gray-800 mb-3 ml-6 text-lg">Notice d'utilisation</h3>
-                  <div className="text-base text-gray-600 space-y-3">
+                  <h3 className="font-semibold text-gray-800 mb-4 ml-6 text-xl">Notice d'utilisation</h3>
+                  <div className="text-lg text-gray-600 space-y-4">
                     <p><strong>Objectif :</strong> Ce simulateur compare les avantages fiscaux entre une société classique et une SCOP.</p>
                     <p><strong>Affectation du résultat SCOP :</strong> La répartition (participation, réserves, dividendes) s'applique sur le résultat net après IS, conformément aux règles comptables SCOP.</p>
                     <p><strong>Déductions fiscales :</strong> La participation (min. 25%) et les réserves impartageables (min. 16%) sont déductibles fiscalement, optimisant l'impôt sur les sociétés.</p>
@@ -224,8 +224,8 @@ function App() {
       
       <footer className="text-center py-6 text-xs text-gray-500">
         <div className="container mx-auto px-4">
-          <p className="text-sm">Ce simulateur est un outil pédagogique. Les résultats sont basés sur les données que vous fournissez.</p>
-          <p className="text-sm">Consultez toujours un expert-comptable ou un conseiller financier pour une analyse complète.</p>
+          <p className="text-base">Ce simulateur est un outil pédagogique. Les résultats sont basés sur les données que vous fournissez.</p>
+          <p className="text-base">Consultez toujours un expert-comptable ou un conseiller financier pour une analyse complète.</p>
         </div>
       </footer>
     </div>

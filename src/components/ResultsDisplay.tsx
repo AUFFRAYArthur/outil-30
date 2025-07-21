@@ -108,9 +108,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
 
     return (
         <tr className={`border-b border-gray-200 last:border-b-0 ${isBold ? 'bg-gray-50 font-semibold' : ''}`}>
-            <td className={`py-3 px-5 text-base ${isBold ? 'text-gray-800' : 'text-gray-600'} ${indent ? 'pl-10' : ''}`}>{label}</td>
-            <td className={`py-3 px-5 text-base font-medium text-right ${isSubtle ? 'text-gray-400' : 'text-gray-800'}`}>{formatValue(sansScopValue)}</td>
-            <td className={`py-3 px-5 text-base font-medium text-right ${isSubtle ? 'text-gray-400' : valueClass}`}>{formatValue(avecScopValue)}</td>
+            <td className={`py-4 px-6 text-lg ${isBold ? 'text-gray-800' : 'text-gray-600'} ${indent ? 'pl-12' : ''}`}>{label}</td>
+            <td className={`py-4 px-6 text-lg font-medium text-right ${isSubtle ? 'text-gray-400' : 'text-gray-800'}`}>{formatValue(sansScopValue)}</td>
+            <td className={`py-4 px-6 text-lg font-medium text-right ${isSubtle ? 'text-gray-400' : valueClass}`}>{formatValue(avecScopValue)}</td>
         </tr>
     );
   };
@@ -118,40 +118,40 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
   return (
     <Card className="flex flex-col h-full">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-800">Résultats Comparatifs</h2>
+        <h2 className="text-4xl font-bold text-gray-800 mb-2">Résultats Comparatifs</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-7">
-        <div className="bg-green-50 border border-green-200 p-5 rounded-lg text-center">
-          <p className="text-base text-green-700">Économie d'IS</p>
-          <p className="text-2xl font-bold text-green-800 flex items-center justify-center space-x-1">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-green-50 border border-green-200 p-6 rounded-lg text-center">
+          <p className="text-lg text-green-700">Économie d'IS</p>
+          <p className="text-3xl font-bold text-green-800 flex items-center justify-center space-x-1">
             <TrendingUp size={20} />
             <span>{formatCurrency(economies.is)}</span>
           </p>
         </div>
-        <div className="bg-green-50 border border-green-200 p-5 rounded-lg text-center">
-          <p className="text-base text-green-700">Économie de CET</p>
-          <p className="text-2xl font-bold text-green-800 flex items-center justify-center space-x-1">
+        <div className="bg-green-50 border border-green-200 p-6 rounded-lg text-center">
+          <p className="text-lg text-green-700">Économie de CET</p>
+          <p className="text-3xl font-bold text-green-800 flex items-center justify-center space-x-1">
             <TrendingUp size={20} />
             <span>{formatCurrency(economies.cet)}</span>
           </p>
         </div>
-        <div className="bg-blue-50 border border-blue-200 p-5 rounded-lg text-center">
-          <p className="text-base text-blue-700">Gain Fiscal Total Annuel</p>
-          <p className="text-2xl font-bold text-blue-800 flex items-center justify-center space-x-1">
+        <div className="bg-blue-50 border border-blue-200 p-6 rounded-lg text-center">
+          <p className="text-lg text-blue-700">Gain Fiscal Total Annuel</p>
+          <p className="text-3xl font-bold text-blue-800 flex items-center justify-center space-x-1">
             <TrendingUp size={20} />
             <span>{formatCurrency(economies.total)}</span>
           </p>
         </div>
       </div>
 
-      <div className="overflow-x-auto mb-9">
+      <div className="overflow-x-auto mb-10">
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50">
-              <th className="py-4 px-5 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider">Indicateur</th>
-              <th className="py-4 px-5 text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Sans SCOP</th>
-              <th className="py-4 px-5 text-right text-sm font-semibold text-gray-500 uppercase tracking-wider">Avec SCOP</th>
+              <th className="py-5 px-6 text-left text-base font-semibold text-gray-500 uppercase tracking-wider">Indicateur</th>
+              <th className="py-5 px-6 text-right text-base font-semibold text-gray-500 uppercase tracking-wider">Sans SCOP</th>
+              <th className="py-5 px-6 text-right text-base font-semibold text-gray-500 uppercase tracking-wider">Avec SCOP</th>
             </tr>
           </thead>
           <tbody className="bg-white">
@@ -162,12 +162,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
             <tr className="bg-gray-50"><td colSpan={3} className="py-2 px-5 text-sm font-semibold text-gray-500">TRAITEMENT FISCAL SCOP</td></tr>
             <ResultRow label="Base imposable avant déductions" sansScopValue={sansScop.baseImposable} avecScopValue={avecScop.baseImposableAvantDeductions} indent />
             
-            <tr className="bg-gray-50"><td colSpan={3} className="py-2 px-5 text-sm font-semibold text-gray-500">AFFECTATION DU RÉSULTAT (SCOP)</td></tr>
+            <tr className="bg-gray-50"><td colSpan={3} className="py-3 px-6 text-base font-semibold text-gray-500">AFFECTATION DU RÉSULTAT (SCOP)</td></tr>
             <ResultRow label="Participation Salariés" sansScopValue="-" avecScopValue={avecScop.montantParticipation} indent />
             <ResultRow label="Réserves Impartageables" sansScopValue="-" avecScopValue={avecScop.montantReserves} indent />
             <ResultRow label="Dividendes" sansScopValue="-" avecScopValue={avecScop.montantDividendes} indent />
 
-            <tr className="bg-gray-50"><td colSpan={3} className="py-2 px-5 text-sm font-semibold text-gray-500">DÉDUCTIONS FISCALES (SCOP)</td></tr>
+            <tr className="bg-gray-50"><td colSpan={3} className="py-3 px-6 text-base font-semibold text-gray-500">DÉDUCTIONS FISCALES (SCOP)</td></tr>
             <ResultRow label="Déduction Participation" sansScopValue={0} avecScopValue={-avecScop.deductionParticipation} isPositive indent />
             <ResultRow label="Déduction Réserves (PPI)" sansScopValue={0} avecScopValue={-avecScop.deductionReserves} isPositive indent />
 
@@ -175,30 +175,30 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
             <ResultRow label="Impôt sur les Sociétés (IS)" sansScopValue={sansScop.is} avecScopValue={avecScop.is} isNegative />
             
             <tr className="bg-gray-100 font-bold">
-              <td className="py-4 px-5 text-base text-gray-800">Coût Fiscal Total</td>
-              <td className="py-4 px-5 text-base text-red-700 text-right">{formatCurrency(sansScop.coutFiscalTotal)}</td>
-              <td className="py-4 px-5 text-base text-green-700 text-right">{formatCurrency(avecScop.coutFiscalTotal)}</td>
+              <td className="py-5 px-6 text-lg text-gray-800">Coût Fiscal Total</td>
+              <td className="py-5 px-6 text-lg text-red-700 text-right">{formatCurrency(sansScop.coutFiscalTotal)}</td>
+              <td className="py-5 px-6 text-lg text-green-700 text-right">{formatCurrency(avecScop.coutFiscalTotal)}</td>
             </tr>
             <tr className="bg-blue-50 font-bold text-blue-800">
-              <td className="py-5 px-5 text-lg">Résultat Net Après IS</td>
-              <td className="py-5 px-5 text-lg text-right">{formatCurrency(sansScop.resultatNet)}</td>
-              <td className="py-5 px-5 text-lg text-right">{formatCurrency(avecScop.resultatNet)}</td>
+              <td className="py-6 px-6 text-xl">Résultat Net Après IS</td>
+              <td className="py-6 px-6 text-xl text-right">{formatCurrency(sansScop.resultatNet)}</td>
+              <td className="py-6 px-6 text-xl text-right">{formatCurrency(avecScop.resultatNet)}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Section Analyse Graphique intégrée */}
-      <div className="border-t border-gray-200 pt-7">
-        <div className="flex items-center space-x-3 mb-5">
+      <div className="border-t border-gray-200 pt-8">
+        <div className="flex items-center space-x-4 mb-6">
           <BarChart3 className="h-6 w-6 text-blue-600" />
-          <h3 className="text-2xl font-bold text-gray-800">Analyse Graphique</h3>
+          <h3 className="text-3xl font-bold text-gray-800">Analyse Graphique</h3>
         </div>
-        <p className="text-base text-gray-600 mb-5">
+        <p className="text-lg text-gray-600 mb-6">
           Comparaison visuelle des impacts fiscaux entre les deux régimes
         </p>
         
-        <div className="h-72">
+        <div className="h-80">
           <Bar data={chartData} options={chartOptions} />
         </div>
       </div>

@@ -12,10 +12,10 @@ interface SimulatorFormProps {
 const SimulatorForm: React.FC<SimulatorFormProps> = ({ inputs, onInputChange, onAllocationChange }) => {
   return (
     <Card>
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Paramètres de Simulation</h2>
+      <h2 className="text-4xl font-bold text-gray-800 mb-8">Paramètres de Simulation</h2>
       <div className="space-y-6">
         <div>
-          <label htmlFor="resultatFiscal" className="flex items-center space-x-2 text-base font-medium text-gray-700 mb-2">
+          <label htmlFor="resultatFiscal" className="flex items-center space-x-2 text-lg font-medium text-gray-700 mb-3">
             <span>Résultat fiscal prévisionnel (€)</span>
             <Tooltip text="Bénéfice imposable prévu avant application du régime SCOP." />
           </label>
@@ -25,12 +25,12 @@ const SimulatorForm: React.FC<SimulatorFormProps> = ({ inputs, onInputChange, on
             id="resultatFiscal"
             value={inputs.resultatFiscal}
             onChange={onInputChange}
-            className="w-full p-3 text-base border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-4 text-lg border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Ex: 100000"
           />
         </div>
         <div>
-          <label htmlFor="cet" className="flex items-center space-x-2 text-base font-medium text-gray-700 mb-2">
+          <label htmlFor="cet" className="flex items-center space-x-2 text-lg font-medium text-gray-700 mb-3">
             <span>Montant annuel de la CET actuelle (€)</span>
             <Tooltip text="Total annuel de Contribution Économique Territoriale (CFE + CVAE)." />
           </label>
@@ -40,12 +40,12 @@ const SimulatorForm: React.FC<SimulatorFormProps> = ({ inputs, onInputChange, on
             id="cet"
             value={inputs.cet}
             onChange={onInputChange}
-            className="w-full p-3 text-base border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-4 text-lg border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Ex: 5000"
           />
         </div>
         <div>
-          <label htmlFor="tauxIS" className="flex items-center space-x-2 text-base font-medium text-gray-700 mb-2">
+          <label htmlFor="tauxIS" className="flex items-center space-x-2 text-lg font-medium text-gray-700 mb-3">
             <span>Taux d’impôt sur les sociétés (IS) (%)</span>
             <Tooltip text="Taux d'imposition appliqué sur les bénéfices. Le taux normal est de 25%. Saisissez la valeur souhaitée." />
           </label>
@@ -55,7 +55,7 @@ const SimulatorForm: React.FC<SimulatorFormProps> = ({ inputs, onInputChange, on
             id="tauxIS"
             value={inputs.tauxIS}
             onChange={onInputChange}
-            className="w-full p-3 text-base border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-4 text-lg border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Ex: 25"
             step="0.1"
           />
@@ -69,7 +69,7 @@ const SimulatorForm: React.FC<SimulatorFormProps> = ({ inputs, onInputChange, on
         />
 
         <div>
-          <label htmlFor="dureeInvestissement" className="flex items-center space-x-2 text-base font-medium text-gray-700 mb-2">
+          <label htmlFor="dureeInvestissement" className="flex items-center space-x-2 text-lg font-medium text-gray-700 mb-3">
             <span>Durée d’investissement prévue (années)</span>
             <Tooltip text="Horizon temporel pour réaliser l'investissement correspondant à la PPI (généralement 4 ans)." />
           </label>
@@ -81,7 +81,7 @@ const SimulatorForm: React.FC<SimulatorFormProps> = ({ inputs, onInputChange, on
             onChange={onInputChange}
             min="1"
             max="10"
-            className="w-full p-3 text-base border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-4 text-lg border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Ex: 4"
           />
         </div>
