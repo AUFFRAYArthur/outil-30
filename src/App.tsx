@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import SimulatorForm from './components/SimulatorForm';
 import ResultsDisplay from './components/ResultsDisplay';
 import ChartDisplay from './components/ChartDisplay';
+import ISCalculator from './components/ISCalculator';
 import { Briefcase, Lightbulb, Printer, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -304,6 +305,11 @@ function App() {
           </div>
         </div>
       </main>
+      
+      {/* Section Calculateur d'IS */}
+      <section className="container mx-auto p-4 md:p-8">
+        <ISCalculator />
+      </section>
       
       <footer className="text-center py-6 text-xs text-gray-500">
         <div className="container mx-auto px-4">
