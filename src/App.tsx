@@ -159,7 +159,7 @@ function App() {
       montantDividendes: montantDividendesFinal,
       deductionParticipation,
       deductionReserves,
-      baseImposable: baseImposableAvecScop,
+      baseImposable: baseImposableApresDeductions,
       is: isAvecScop,
       cet: 0,
       coutFiscalTotal: coutFiscalTotalAvecScop,
