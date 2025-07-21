@@ -95,34 +95,100 @@ function App() {
       resultatNet: resultatNetSansScop,
     };
 
-    // Scénario AVEC SCOP
-    // Étape 1: Calcul de la base imposable avec intégration de la CET comme charge
-    // Pour les SCOP, on intègre la charge CET théorique dans le calcul fiscal
-    const baseImposableAvantDeductions = resultatFiscal + cet; // Intégration CET comme charge d'impôt
+    // Scénario AVEC SCOP - Algorithme itératif
+    // Variables d'entrée pour l'algorithme itératif
+    const baseInitiale = resultatFiscal + cet; // Base imposable initiale incluant CET
+    const tauxParticipation = pourcentageParticipation / 100;
+    const tauxReserves = pourcentageReserves / 100;
+    const tauxDividendes = inputs.pourcentageDividendes / 100;
     
-    // Étape 2: Application des déductions SCOP
-    const deductionParticipation = baseImposableAvantDeductions * (pourcentageParticipation / 100);
-    const deductionReserves = baseImposableAvantDeductions * Math.min(pourcentageReserves / 100, pourcentageParticipation / 100);
+    // Algorithme itératif pour convergence
+    let iteration = 0;
+    const maxIterations = 50;
+    const tolerance = 0.01; // Tolérance de convergence en euros
     
-    const baseImposableAvecScop = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
-    const isAvecScop = baseImposableAvecScop * tauxISDecimal;
+    // Variables de l'itération
+    let baseImposable = baseInitiale;
+    let deductionParticipation = 0;
+    let deductionReserves = 0;
+    let isCalcule = 0;
+    let resultatNet = 0;
+    let montantParticipation = 0;
+    let montantReserves = 0;
+    let montantDividendes = 0;
     
-    // Étape 3: Calcul du résultat net pour la répartition
-    const resultatNetAvecScop = resultatFiscal - isAvecScop; // CET = 0 pour les SCOP (exonération)
+    // Variables de convergence
+    let participationPrecedente = 0;
+    let converge = false;
     
-    // Étape 4: Répartition du résultat net (et non du résultat fiscal)
-    const montantParticipation = resultatNetAvecScop * (pourcentageParticipation / 100);
-    const montantReserves = resultatNetAvecScop * (inputs.pourcentageReserves / 100);
-    const montantDividendes = resultatNetAvecScop * (inputs.pourcentageDividendes / 100);
-
+    while (!converge && iteration < maxIterations) {
+      iteration++;
+      
+      // Étape 1: Calcul des déductions fiscales sur la base imposable courante
+      deductionParticipation = baseImposable * tauxParticipation;
+      
+      // Contrainte: Déduction réserves plafonnée à la déduction participation
+      const deductionReservesTheorique = baseImposable * tauxReserves;
+      deductionReserves = Math.min(deductionReservesTheorique, deductionParticipation);
+      
+      // Étape 2: Calcul de la base imposable après déductions
+      const baseImposableApresDeductions = baseImposable - deductionParticipation - deductionReserves;
+      
+      // Étape 3: Calcul de l'IS
+      isCalcule = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
+      
+      // Étape 4: Calcul du résultat net après IS (sans CET pour SCOP)
+      resultatNet = resultatFiscal - isCalcule;
+      
+      // Étape 5: Répartition du résultat net
+      const nouveauMontantParticipation = resultatNet * tauxParticipation;
+      montantReserves = resultatNet * tauxReserves;
+      montantDividendes = resultatNet * tauxDividendes;
+      
+      // Test de convergence: Participation salariés = Déduction Participation
+      const ecartParticipation = Math.abs(nouveauMontantParticipation - deductionParticipation);
+      
+      if (ecartParticipation <= tolerance) {
+        converge = true;
+        montantParticipation = nouveauMontantParticipation;
+      } else {
+        // Ajustement pour la prochaine itération
+        // Méthode de point fixe avec amortissement pour stabilité
+        const facteurAmortissement = 0.7;
+        const ajustement = (nouveauMontantParticipation - deductionParticipation) * facteurAmortissement;
+        baseImposable = baseInitiale + ajustement;
+        
+        // Sauvegarde pour vérification de convergence
+        participationPrecedente = nouveauMontantParticipation;
+      }
+    }
+    
+    // Gestion des cas de non-convergence
+    if (!converge) {
+      console.warn(`Algorithme n'a pas convergé après ${maxIterations} itérations`);
+      // Utilisation des dernières valeurs calculées
+      montantParticipation = resultatNet * tauxParticipation;
+    }
+    
+    // Recalcul final avec les valeurs convergées
+    const baseImposableFinale = baseInitiale;
+    const baseImposableAvecScop = baseImposableFinale - deductionParticipation - deductionReserves;
+    const isAvecScop = Math.max(0, baseImposableAvecScop * tauxISDecimal);
+    const resultatNetAvecScop = resultatFiscal - isAvecScop;
+    
+    // Vérification finale des contraintes
+    const montantParticipationFinal = resultatNetAvecScop * tauxParticipation;
+    const montantReservesFinal = resultatNetAvecScop * tauxReserves;
+    const montantDividendesFinal = resultatNetAvecScop * tauxDividendes;
+    
     const coutFiscalTotalAvecScop = isAvecScop; // CET = 0 pour les SCOP
 
     const avecScop = {
       resultatFiscal,
-      baseImposableAvantDeductions,
-      montantParticipation,
-      montantReserves,
-      montantDividendes,
+      baseImposableAvantDeductions: baseImposableFinale,
+      montantParticipation: montantParticipationFinal,
+      montantReserves: montantReservesFinal,
+      montantDividendes: montantDividendesFinal,
       deductionParticipation,
       deductionReserves,
       baseImposable: baseImposableAvecScop,
@@ -130,6 +196,8 @@ function App() {
       cet: 0,
       coutFiscalTotal: coutFiscalTotalAvecScop,
       resultatNet: resultatNetAvecScop,
+      iterations: iteration,
+      converge: converge
     };
 
     // Économies
