@@ -141,7 +141,7 @@ function App() {
     }
     
     // Calcul final de la participation (égale à la déduction)
-    montantParticipation = deductionParticipation;
+    montantParticipation = resultatNetAvecScop * tauxParticipation;
     
     // Répartition finale du résultat net
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
