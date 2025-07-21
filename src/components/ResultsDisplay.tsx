@@ -7,17 +7,18 @@ import {
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
+  Tooltip as ChartJSTooltip,
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import Tooltip from './Tooltip';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
-  Tooltip,
+  ChartJSTooltip,
   Legend
 );
 
