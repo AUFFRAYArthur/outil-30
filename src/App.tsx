@@ -83,7 +83,7 @@ function App() {
     // Scénario SANS SCOP
     const isSansScop = resultatFiscal * tauxISDecimal;
     const coutFiscalTotalSansScop = isSansScop + cet;
-    const resultatNetSansScop = resultatFiscal - coutFiscalTotalSansScop;
+    const resultatNetSansScop = resultatFiscal - isSansScop;
 
     const sansScop = {
       resultatFiscal,

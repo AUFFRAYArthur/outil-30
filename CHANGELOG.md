@@ -66,6 +66,25 @@ Les nouveaux calculs respectent :
 - L'équilibre de la répartition (total = 100%)
 - La logique d'optimisation fiscale des SCOP
 
+## Version 2.1.0 - Correction Terminologie Comptable
+
+### Modifications Apportées
+
+#### 1. Correction du Calcul du Résultat Net
+- **Avant** : Résultat Net = Résultat Fiscal - IS - CET
+- **Après** : Résultat Net = Résultat Fiscal - IS (seul l'IS est déduit)
+- **Justification** : Conformité aux normes comptables françaises
+
+#### 2. Mise à Jour de la Terminologie
+- **Avant** : "Résultat Net Après Impôts"
+- **Après** : "Résultat Net Après IS"
+- **Raison** : Précision terminologique - seul l'IS impacte le résultat net
+
+#### 3. Traitement de la CET
+- La CET reste affichée comme charge fiscale distincte
+- Elle n'est plus déduite dans le calcul du résultat net
+- Conforme au traitement comptable français des impôts locaux
+
 ### Compatibilité
 
 - **Rétrocompatible** : Les paramètres d'entrée restent identiques

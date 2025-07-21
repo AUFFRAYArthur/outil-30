@@ -108,7 +108,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF })
               <td className="py-3 px-4 text-sm text-green-700 text-right">{formatCurrency(avecScop.coutFiscalTotal)}</td>
             </tr>
             <tr className="bg-blue-50 font-bold text-blue-800">
-              <td className="py-4 px-4 text-md">Résultat Net Après Impôts</td>
+              <td className="py-4 px-4 text-md">Résultat Net Après IS</td>
               <td className="py-4 px-4 text-md text-right">{formatCurrency(sansScop.resultatNet)}</td>
               <td className="py-4 px-4 text-md text-right">{formatCurrency(avecScop.resultatNet)}</td>
             </tr>

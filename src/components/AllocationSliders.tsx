@@ -18,7 +18,7 @@ const AllocationSliders: React.FC<AllocationSlidersProps> = ({ participation, re
     <div className="p-4 border border-gray-200 rounded-lg space-y-4">
       <h3 className="text-lg font-semibold text-gray-700">Affectation du Résultat</h3>
       <p className="text-xs text-gray-500 mb-2">
-        La répartition s'applique sur le résultat net après impôts (et non sur le résultat fiscal)
+        La répartition s'applique sur le résultat net après IS (et non sur le résultat fiscal)
       </p>
       <InputSlider
         label="Participation Salariés"
