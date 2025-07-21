@@ -30,6 +30,25 @@ const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 };
 
+// Composant spécial pour les lignes IS avec tooltip
+const ISResultRow: React.FC<{ label: string, sansScopValue: number, avecScopValue: number, sansScopDetail: string, avecScopDetail: string, indent?: boolean }> = 
+({ label, sansScopValue, avecScopValue, sansScopDetail, avecScopDetail, indent = false }) => {
+  return (
+    <tr className="border-b border-gray-200 hover:bg-gray-50 cursor-help relative group">
+      <td className={`py-4 px-6 text-lg text-gray-600 flex items-center space-x-2 ${indent ? 'pl-12' : ''}`}>
+        <span>{label}</span>
+        <Tooltip text={sansScopDetail} />
+      </td>
+      <td className="py-4 px-6 text-lg font-medium text-right text-red-600" title={sansScopDetail}>
+        {formatCurrency(sansScopValue)}
+      </td>
+      <td className="py-4 px-6 text-lg font-medium text-right text-red-600" title={avecScopDetail}>
+        {formatCurrency(avecScopValue)}
+      </td>
+    </tr>
+  );
+};
+
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
   const { sansScop, avecScop, economies } = results;
 
@@ -141,25 +160,6 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
             <td className={`py-4 px-6 text-lg font-medium text-right ${isSubtle ? 'text-gray-400' : 'text-gray-800'}`}>{formatValue(sansScopValue)}</td>
             <td className={`py-4 px-6 text-lg font-medium text-right ${isSubtle ? 'text-gray-400' : valueClass}`}>{formatValue(avecScopValue)}</td>
         </tr>
-    );
-  };
-
-  // Composant spécial pour les lignes IS avec tooltip
-  const ISResultRow: React.FC<{ label: string, sansScopValue: number, avecScopValue: number, sansScopDetail: string, avecScopDetail: string, indent?: boolean }> = 
-  ({ label, sansScopValue, avecScopValue, sansScopDetail, avecScopDetail, indent = false }) => {
-    return (
-      <tr className="border-b border-gray-200 hover:bg-gray-50 cursor-help relative group">
-        <td className={`py-4 px-6 text-lg text-gray-600 flex items-center space-x-2 ${indent ? 'pl-12' : ''}`}>
-          <span>{label}</span>
-          <Tooltip text={sansScopDetail} />
-        </td>
-        <td className="py-4 px-6 text-lg font-medium text-right text-red-600" title={sansScopDetail}>
-          {formatCurrency(sansScopValue)}
-        </td>
-        <td className="py-4 px-6 text-lg font-medium text-right text-red-600" title={avecScopDetail}>
-          {formatCurrency(avecScopValue)}
-        </td>
-      </tr>
     );
   };
 
