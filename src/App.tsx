@@ -107,6 +107,7 @@ function App() {
     // Calcul itératif pour convergence
     let deductionParticipation = 0;
     let deductionReserves = 0;
+    let baseImposableApresDeductions = 0;
     let isAvecScop = 0;
     let resultatNetAvecScop = 0;
     let montantParticipation = 0;
@@ -121,7 +122,7 @@ function App() {
       );
       
       // Base imposable après déductions
-      const baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
+      baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
       
       // Calcul de l'IS
       isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
