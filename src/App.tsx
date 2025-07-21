@@ -104,48 +104,26 @@ function App() {
     // Base imposable initiale
     const baseImposableAvantDeductions = resultatFiscal + cet;
     
-    // Calcul itératif pour convergence
-    let deductionParticipation = 0;
-    let deductionReserves = 0;
+    // Calcul des déductions fiscales (fixes, basées sur la base imposable avant déductions)
+    const deductionParticipation = baseImposableAvantDeductions * tauxParticipation;
+    const deductionReserves = Math.min(
+      baseImposableAvantDeductions * tauxReserves,
+      deductionParticipation
+    );
+    
+    // Calcul de l'IS avec les déductions
     let baseImposableApresDeductions = 0;
     let isAvecScop = 0;
-    let resultatNetAvecScop = 0;
-    let montantParticipation = 0;
     
-    // Itération pour convergence (max 10 itérations)
-    for (let i = 0; i < 10; i++) {
-      // Calcul de l'IS avec déductions actuelles
-      baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
-      isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
-      
-      // Résultat net après IS
-      resultatNetAvecScop = resultatFiscal - isAvecScop;
-      
-      // Calcul de la nouvelle déduction participation basée sur le résultat net
-      const nouvelleDeductionParticipation = resultatNetAvecScop * tauxParticipation;
-      
-      // Calcul des déductions fiscales
-      deductionReserves = Math.min(
-        baseImposableAvantDeductions * tauxReserves,
-        nouvelleDeductionParticipation
-      );
-      
-      // Test de convergence
-      if (Math.abs(nouvelleDeductionParticipation - deductionParticipation) < 0.01) {
-        deductionParticipation = nouvelleDeductionParticipation;
-        break;
-      }
-      
-      // Mise à jour pour la prochaine itération
-      deductionParticipation = nouvelleDeductionParticipation;
-    }
+    // Calcul direct de l'IS
+    baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
+    isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
     
-    // Calcul final de la participation (égale à la déduction)
-    // Recalcul final du résultat net après IS avec l'IS convergé
-    resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
+    // Résultat net après IS (selon CHANGELOG v2.1.0: Résultat Fiscal - IS)
+    const resultatNetAvecScop = resultatFiscal - isAvecScop;
     
-    // Calcul final de la participation sur le résultat net après IS
-    montantParticipation = resultatNetAvecScop * tauxParticipation;
+    // Calcul de la participation sur le résultat net après IS
+    const montantParticipation = resultatNetAvecScop * tauxParticipation;
     
     // Répartition finale du résultat net
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
@@ -165,7 +143,7 @@ function App() {
       is: isAvecScop,
       cet: 0,
       coutFiscalTotal: coutFiscalTotalAvecScop,
-      resultatNet: baseImposableAvantDeductions - isAvecScop,
+      resultatNet: resultatNetAvecScop,
     };
 
     // Économies
