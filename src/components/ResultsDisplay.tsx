@@ -1,6 +1,25 @@
 import React from 'react';
 import Card from './Card';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, BarChart3 } from 'lucide-react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface ResultsDisplayProps {
   results: any;
@@ -13,6 +32,67 @@ const formatCurrency = (value: number) => {
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
   const { sansScop, avecScop, economies } = results;
+
+  // Données pour le graphique
+  const chartData = {
+    labels: ['IS', 'CET', 'Coût Fiscal Total', 'Résultat Net'],
+    datasets: [
+      {
+        label: 'Sans SCOP',
+        data: [
+          sansScop.is || 0,
+          sansScop.cet || 0,
+          sansScop.coutFiscalTotal || 0,
+          sansScop.resultatNet || 0,
+        ],
+        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+        borderColor: 'rgba(239, 68, 68, 1)',
+        borderWidth: 1,
+      },
+      {
+        label: 'Avec SCOP',
+        data: [
+          avecScop.is || 0,
+          avecScop.cet || 0,
+          avecScop.coutFiscalTotal || 0,
+          avecScop.resultatNet || 0,
+        ],
+        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+        borderColor: 'rgba(34, 197, 94, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function(value: any) {
+            return formatCurrency(value);
+          }
+        }
+      }
+    },
+  };
 
   const ResultRow: React.FC<{ label: string, sansScopValue: number | string, avecScopValue: number | string, isCurrency?: boolean, isBold?: boolean, isSubtle?: boolean, isPositive?: boolean, isNegative?: boolean, indent?: boolean }> = 
   ({ label, sansScopValue, avecScopValue, isCurrency = true, isBold = false, isSubtle = false, isPositive = false, isNegative = false, indent = false }) => {
@@ -65,7 +145,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
         </div>
       </div>
 
-      <div className="flex-grow overflow-x-auto">
+      <div className="overflow-x-auto mb-8">
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50">
@@ -106,6 +186,21 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      {/* Section Analyse Graphique intégrée */}
+      <div className="border-t border-gray-200 pt-6">
+        <div className="flex items-center space-x-2 mb-4">
+          <BarChart3 className="h-6 w-6 text-blue-600" />
+          <h3 className="text-xl font-bold text-gray-800">Analyse Graphique</h3>
+        </div>
+        <p className="text-sm text-gray-600 mb-4">
+          Comparaison visuelle des impacts fiscaux entre les deux régimes
+        </p>
+        
+        <div className="h-64">
+          <Bar data={chartData} options={chartOptions} />
+        </div>
       </div>
     </Card>
   );

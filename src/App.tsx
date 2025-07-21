@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import SimulatorForm from './components/SimulatorForm';
 import ResultsDisplay from './components/ResultsDisplay';
 import ChartDisplay from './components/ChartDisplay';
-
 import { Briefcase, Lightbulb, Printer, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -217,9 +216,8 @@ function App() {
               onAllocationChange={handleAllocationChange} 
             />
           </div>
-          <div className="lg:col-span-3 space-y-8" ref={resultsRef}>
+          <div className="lg:col-span-3" ref={resultsRef}>
             <ResultsDisplay results={results} />
-            <ChartDisplay results={results} />
           </div>
         </div>
       </main>
