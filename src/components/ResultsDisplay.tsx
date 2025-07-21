@@ -85,6 +85,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF })
           <tbody className="bg-white">
             <ResultRow label="Résultat fiscal avant affectation" sansScopValue={sansScop.resultatFiscal} avecScopValue={avecScop.resultatFiscal} isBold />
             
+            <tr className="bg-gray-50"><td colSpan={3} className="py-1 px-4 text-xs font-semibold text-gray-500">TRAITEMENT FISCAL SCOP</td></tr>
+            <ResultRow label="Base imposable avant déductions" sansScopValue={sansScop.baseImposable} avecScopValue={avecScop.baseImposableAvantDeductions} indent />
+            
             <tr className="bg-gray-50"><td colSpan={3} className="py-1 px-4 text-xs font-semibold text-gray-500">AFFECTATION DU RÉSULTAT (SCOP)</td></tr>
             <ResultRow label="Participation Salariés" sansScopValue="-" avecScopValue={avecScop.montantParticipation} indent />
             <ResultRow label="Réserves Impartageables" sansScopValue="-" avecScopValue={avecScop.montantReserves} indent />

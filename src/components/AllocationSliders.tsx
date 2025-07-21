@@ -17,9 +17,12 @@ const AllocationSliders: React.FC<AllocationSlidersProps> = ({ participation, re
   return (
     <div className="p-4 border border-gray-200 rounded-lg space-y-4">
       <h3 className="text-lg font-semibold text-gray-700">Affectation du Résultat</h3>
+      <p className="text-xs text-gray-500 mb-2">
+        La répartition s'applique sur le résultat net après impôts (et non sur le résultat fiscal)
+      </p>
       <InputSlider
         label="Participation Salariés"
-        tooltip="Part du bénéfice distribuée aux salariés. Minimum 25%. 100% déductible."
+        tooltip="Part du résultat net distribuée aux salariés. Minimum 25%. 100% déductible fiscalement."
         value={participation}
         onChange={handleChange}
         min={25}
@@ -30,7 +33,7 @@ const AllocationSliders: React.FC<AllocationSlidersProps> = ({ participation, re
       />
       <InputSlider
         label="Réserves Impartageables (PPI)"
-        tooltip="Part mise en réserve pour investissement. Minimum 16%. Déductible jusqu'à hauteur du % de participation."
+        tooltip="Part du résultat net mise en réserve pour investissement. Minimum 16%. Déductible jusqu'à hauteur du % de participation."
         value={reserves}
         onChange={handleChange}
         min={16}
@@ -41,7 +44,7 @@ const AllocationSliders: React.FC<AllocationSlidersProps> = ({ participation, re
       />
       <InputSlider
         label="Dividendes"
-        tooltip="Part distribuée aux associés. Non déductible."
+        tooltip="Part du résultat net distribuée aux associés. Non déductible fiscalement."
         value={dividendes}
         onChange={handleChange}
         min={0}

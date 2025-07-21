@@ -95,20 +95,30 @@ function App() {
     };
 
     // Scénario AVEC SCOP
-    const montantParticipation = resultatFiscal * (pourcentageParticipation / 100);
-    const montantReserves = resultatFiscal * (inputs.pourcentageReserves / 100);
-    const montantDividendes = resultatFiscal * (inputs.pourcentageDividendes / 100);
-
-    const deductionParticipation = montantParticipation;
-    const deductionReserves = resultatFiscal * Math.min(pourcentageReserves / 100, pourcentageParticipation / 100);
-
-    const baseImposableAvecScop = resultatFiscal - deductionParticipation - deductionReserves;
+    // Étape 1: Calcul de la base imposable avec intégration de la CET comme charge
+    // Pour les SCOP, on intègre la charge CET théorique dans le calcul fiscal
+    const baseImposableAvantDeductions = resultatFiscal + cet; // Intégration CET comme charge d'impôt
+    
+    // Étape 2: Application des déductions SCOP
+    const deductionParticipation = baseImposableAvantDeductions * (pourcentageParticipation / 100);
+    const deductionReserves = baseImposableAvantDeductions * Math.min(pourcentageReserves / 100, pourcentageParticipation / 100);
+    
+    const baseImposableAvecScop = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
     const isAvecScop = baseImposableAvecScop * tauxISDecimal;
-    const coutFiscalTotalAvecScop = isAvecScop; // CET = 0
-    const resultatNetAvecScop = resultatFiscal - coutFiscalTotalAvecScop;
+    
+    // Étape 3: Calcul du résultat net pour la répartition
+    const resultatNetAvecScop = resultatFiscal - isAvecScop; // CET = 0 pour les SCOP (exonération)
+    
+    // Étape 4: Répartition du résultat net (et non du résultat fiscal)
+    const montantParticipation = resultatNetAvecScop * (pourcentageParticipation / 100);
+    const montantReserves = resultatNetAvecScop * (inputs.pourcentageReserves / 100);
+    const montantDividendes = resultatNetAvecScop * (inputs.pourcentageDividendes / 100);
+
+    const coutFiscalTotalAvecScop = isAvecScop; // CET = 0 pour les SCOP
 
     const avecScop = {
       resultatFiscal,
+      baseImposableAvantDeductions,
       montantParticipation,
       montantReserves,
       montantDividendes,
@@ -124,7 +134,7 @@ function App() {
     // Économies
     const economies = {
       is: isSansScop - isAvecScop,
-      cet: cet,
+      cet: cet, // Économie CET due à l'exonération SCOP
       total: (isSansScop - isAvecScop) + cet,
     };
 
