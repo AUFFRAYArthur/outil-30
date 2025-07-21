@@ -161,7 +161,7 @@ function App() {
       is: isAvecScop,
       cet: 0,
       coutFiscalTotal: coutFiscalTotalAvecScop,
-      resultatNet: resultatNetAvecScop,
+      resultatNet: baseImposableAvantDeductions - isAvecScop,
     };
 
     // Économies
