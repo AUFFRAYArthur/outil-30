@@ -12,6 +12,8 @@ function App() {
     resultatFiscal: 100000,
     cet: 5000,
     tauxIS: 25,
+    plafondTauxReduit: 42500,
+    tauxISReduit: 15,
     pourcentageParticipation: 45,
     pourcentageReserves: 45,
     pourcentageDividendes: 10,
@@ -79,11 +81,36 @@ function App() {
 
 
   useEffect(() => {
-    const { resultatFiscal, cet, tauxIS, pourcentageParticipation, pourcentageReserves } = inputs;
+    const { resultatFiscal, cet, tauxIS, plafondTauxReduit, tauxISReduit, pourcentageParticipation, pourcentageReserves } = inputs;
     const tauxISDecimal = tauxIS / 100;
+    const tauxISReduitDecimal = tauxISReduit / 100;
+
+    // Fonction de calcul de l'IS avec taux progressif
+    const calculerIS = (baseImposable: number) => {
+      if (baseImposable <= 0) return 0;
+      
+      let isTotal = 0;
+      
+      // Application du taux réduit si applicable
+      if (plafondTauxReduit > 0 && tauxISReduit > 0) {
+        const montantTauxReduit = Math.min(baseImposable, plafondTauxReduit);
+        isTotal += montantTauxReduit * tauxISReduitDecimal;
+        
+        // Application du taux normal sur le surplus
+        if (baseImposable > plafondTauxReduit) {
+          const montantTauxNormal = baseImposable - plafondTauxReduit;
+          isTotal += montantTauxNormal * tauxISDecimal;
+        }
+      } else {
+        // Pas de taux réduit applicable, taux normal sur la totalité
+        isTotal = baseImposable * tauxISDecimal;
+      }
+      
+      return isTotal;
+    };
 
     // Scénario SANS SCOP
-    const isSansScop = resultatFiscal * tauxISDecimal;
+    const isSansScop = calculerIS(resultatFiscal);
     const coutFiscalTotalSansScop = isSansScop + cet;
     const resultatNetSansScop = resultatFiscal - isSansScop;
 
@@ -117,7 +144,7 @@ function App() {
     for (let i = 0; i < 10; i++) {
       // Calcul de l'IS avec déductions actuelles
       baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
-      isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
+      isAvecScop = Math.max(0, calculerIS(baseImposableApresDeductions));
       
       // Résultat net après IS
       resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
@@ -159,7 +186,7 @@ function App() {
     baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
     
     // Recalcul final de l'IS avec la base imposable corrigée
-    isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
+    isAvecScop = Math.max(0, calculerIS(baseImposableApresDeductions));
     
     const coutFiscalTotalAvecScop = isAvecScop; // CET = 0 pour les SCOP
 

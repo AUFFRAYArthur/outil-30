@@ -33,6 +33,35 @@ const formatCurrency = (value: number) => {
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
   const { sansScop, avecScop, economies } = results;
 
+  // Fonction pour calculer le détail de l'IS avec taux progressif
+  const getISDetail = (baseImposable: number, plafondTauxReduit: number, tauxISReduit: number, tauxISNormal: number) => {
+    if (baseImposable <= 0) return "Aucun IS à payer";
+    
+    let detail = "Calcul détaillé de l'IS :\n";
+    
+    if (plafondTauxReduit > 0 && tauxISReduit > 0) {
+      const montantTauxReduit = Math.min(baseImposable, plafondTauxReduit);
+      const isTauxReduit = montantTauxReduit * (tauxISReduit / 100);
+      
+      detail += `• Montant soumis au taux réduit : ${formatCurrency(montantTauxReduit)} × ${tauxISReduit}% = ${formatCurrency(isTauxReduit)}\n`;
+      
+      if (baseImposable > plafondTauxReduit) {
+        const montantTauxNormal = baseImposable - plafondTauxReduit;
+        const isTauxNormal = montantTauxNormal * (tauxISNormal / 100);
+        detail += `• Montant soumis au taux normal : ${formatCurrency(montantTauxNormal)} × ${tauxISNormal}% = ${formatCurrency(isTauxNormal)}\n`;
+      }
+      
+      detail += `• Total IS = ${formatCurrency(baseImposable <= plafondTauxReduit ? isTauxReduit : isTauxReduit + (baseImposable - plafondTauxReduit) * (tauxISNormal / 100))}`;
+    } else {
+      const isTotal = baseImposable * (tauxISNormal / 100);
+      detail += `• Aucun taux réduit applicable\n`;
+      detail += `• Montant total soumis au taux normal : ${formatCurrency(baseImposable)} × ${tauxISNormal}% = ${formatCurrency(isTotal)}\n`;
+      detail += `• Total IS = ${formatCurrency(isTotal)}`;
+    }
+    
+    return detail;
+  };
+
   // Données pour le graphique
   const chartData = {
     labels: ['IS', 'CET', 'Coût Fiscal Total', 'Résultat Net'],
@@ -115,6 +144,25 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
     );
   };
 
+  // Composant spécial pour les lignes IS avec tooltip
+  const ISResultRow: React.FC<{ label: string, sansScopValue: number, avecScopValue: number, sansScopDetail: string, avecScopDetail: string, indent?: boolean }> = 
+  ({ label, sansScopValue, avecScopValue, sansScopDetail, avecScopDetail, indent = false }) => {
+    return (
+      <tr className="border-b border-gray-200 hover:bg-gray-50 cursor-help relative group">
+        <td className={`py-4 px-6 text-lg text-gray-600 flex items-center space-x-2 ${indent ? 'pl-12' : ''}`}>
+          <span>{label}</span>
+          <Tooltip text={sansScopDetail} />
+        </td>
+        <td className="py-4 px-6 text-lg font-medium text-right text-red-600" title={sansScopDetail}>
+          {formatCurrency(sansScopValue)}
+        </td>
+        <td className="py-4 px-6 text-lg font-medium text-right text-red-600" title={avecScopDetail}>
+          {formatCurrency(avecScopValue)}
+        </td>
+      </tr>
+    );
+  };
+
   return (
     <Card className="flex flex-col h-full">
       <div className="mb-6">
@@ -156,6 +204,14 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
           </thead>
           <tbody className="bg-white">
             <ResultRow label="Résultat fiscal avant affectation" sansScopValue={sansScop.resultatFiscal} avecScopValue={avecScop.resultatFiscal} isBold />
+            
+            <ISResultRow 
+              label="Impôt sur les Sociétés (IS)" 
+              sansScopValue={sansScop.is} 
+              avecScopValue={avecScop.is}
+              sansScopDetail={getISDetail(sansScop.baseImposable, 42500, 15, 25)}
+              avecScopDetail={getISDetail(avecScop.baseImposable, 42500, 15, 25)}
+            />
             
             <ResultRow label="Contribution Économique (CET)" sansScopValue={sansScop.cet} avecScopValue={avecScop.cet} isNegative />
             
