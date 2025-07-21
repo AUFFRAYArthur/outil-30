@@ -15,12 +15,12 @@ interface InputSliderProps {
 
 const InputSlider: React.FC<InputSliderProps> = ({ label, value, onChange, min, max, step, unit, name, tooltip }) => {
   return (
-    <div className="space-y-2">
-      <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+    <div className="space-y-3">
+      <label className="flex items-center space-x-2 text-base font-medium text-gray-700">
         <span>{label}</span>
         {tooltip && <Tooltip text={tooltip} />}
       </label>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-5">
         <input
           type="range"
           name={name}
@@ -31,7 +31,7 @@ const InputSlider: React.FC<InputSliderProps> = ({ label, value, onChange, min, 
           onChange={onChange}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
         />
-        <span className="text-lg font-semibold text-blue-600 w-20 text-right">{Math.round(value)}{unit}</span>
+        <span className="text-xl font-semibold text-blue-600 w-24 text-right">{Math.round(value)}{unit}</span>
       </div>
     </div>
   );

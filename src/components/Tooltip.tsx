@@ -16,7 +16,7 @@ const Tooltip: React.FC<TooltipProps> = ({ text }) => {
     >
       <Info className="h-4 w-4 text-gray-400 cursor-pointer" />
       {isVisible && (
-        <div className="absolute bottom-full mb-2 w-64 bg-gray-800 text-white text-xs rounded-md p-2 z-10 shadow-lg">
+        <div className="absolute bottom-full mb-2 w-72 bg-gray-800 text-white text-sm rounded-md p-3 z-10 shadow-lg">
           {text}
         </div>
       )}
