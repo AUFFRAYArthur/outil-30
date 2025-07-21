@@ -150,19 +150,19 @@ function App() {
         <!DOCTYPE html>
         <html>
           <head>
-            <title>Simulateur SCOP - Résultats</title>
+            <title>Simulateur SCOP - Résultats A3</title>
             <style>
               @page {
-                size: A4 landscape;
-                margin: 0.5in;
+                size: A3 portrait;
+                margin: 0.4in;
               }
               body {
                 font-family: system-ui, -apple-system, sans-serif;
                 margin: 0;
                 padding: 0;
-                transform: scale(0.75);
+                transform: scale(0.9);
                 transform-origin: top left;
-                width: 133%;
+                width: 111%;
               }
             </style>
             <link href="/src/index.css" rel="stylesheet">

@@ -5,13 +5,13 @@
 @media print {
   /* Configuration pour une seule page PDF */
   @page {
-    size: A4 landscape;
-    margin: 0.5in;
+    size: A3 portrait;
+    margin: 0.4in;
   }
   
   /* Mise à l'échelle globale pour tenir sur une page */
   html {
-    zoom: 0.65;
+    zoom: 0.85;
     transform-origin: top left;
   }
   
@@ -35,7 +35,7 @@
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    transform: scale(0.8);
+    transform: scale(1.0);
     transform-origin: top left;
     overflow: visible !important;
   }
@@ -50,8 +50,9 @@
   /* Préservation de la disposition en grille */
   .grid {
     display: grid !important;
-    grid-template-columns: 2fr 3fr !important;
-    gap: 1rem !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 1.5rem !important;
     width: 100% !important;
   }
   
@@ -63,13 +64,13 @@
   
   /* Optimisation des tableaux pour l'impression */
   table {
-    font-size: 0.85rem !important;
+    font-size: 0.9rem !important;
     width: 100% !important;
   }
   
   /* Ajustement des graphiques */
   canvas {
-    max-height: 200px !important;
+    max-height: 250px !important;
     width: 100% !important;
   }
   
@@ -105,19 +106,35 @@
   
   /* Optimisation de l'espacement pour l'impression */
   .space-y-6 > * + * {
-    margin-top: 1rem !important;
+    margin-top: 1.25rem !important;
   }
   
   .space-y-8 > * + * {
-    margin-top: 1.5rem !important;
+    margin-top: 1.75rem !important;
   }
   
   /* Ajustement des padding pour l'impression */
   .p-6 {
-    padding: 1rem !important;
+    padding: 1.25rem !important;
   }
   
   .p-8 {
-    padding: 1.5rem !important;
+    padding: 1.75rem !important;
+  }
+  
+  /* Optimisation spécifique pour A3 portrait */
+  .lg\:col-span-2, .lg\:col-span-3 {
+    grid-column: 1 !important;
+  }
+  
+  /* Ajustement des titres pour A3 */
+  h1, h2, h3 {
+    line-height: 1.2 !important;
+  }
+  
+  /* Optimisation des cartes de résultats */
+  .grid.grid-cols-1.md\:grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
   }
 }
