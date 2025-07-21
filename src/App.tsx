@@ -180,9 +180,7 @@ function App() {
           </div>
           <div className="lg:col-span-3 space-y-8" ref={resultsRef}>
             <ResultsDisplay results={results} onExportPDF={exportPDF} />
-            {inputs.dureeInvestissement > 0 && (
-              <ChartDisplay results={results} duree={inputs.dureeInvestissement} />
-            )}
+            {}
           </div>
         </div>
       </main>
