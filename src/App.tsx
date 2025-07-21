@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SimulatorForm from './components/SimulatorForm';
 import ResultsDisplay from './components/ResultsDisplay';
-import ChartDisplay from './components/ChartDisplay';
+
 import { Briefcase, Lightbulb, Printer, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
