@@ -136,7 +136,6 @@ function App() {
         break;
       }
       
-      montantParticipation = nouvelleParticipation;
       // Mise à jour pour la prochaine itération
       deductionParticipation = nouvelleDeductionParticipation;
     }
