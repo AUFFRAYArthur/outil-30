@@ -83,7 +83,7 @@ function App() {
     // Scénario SANS SCOP
     const isSansScop = resultatFiscal * tauxISDecimal;
     const coutFiscalTotalSansScop = isSansScop + cet;
-    const resultatNetSansScop = resultatFiscal - coutFiscalTotalSansScop;
+    const resultatNetSansScop = resultatFiscal - isSansScop;
 
     const sansScop = {
       resultatFiscal,
@@ -107,7 +107,7 @@ function App() {
     const isAvecScop = baseImposableAvecScop * tauxISDecimal;
     
     // Étape 3: Calcul du résultat net pour la répartition
-    const resultatNetAvecScop = resultatFiscal - isAvecScop; // CET = 0 pour les SCOP (exonération)
+    const resultatNetAvecScop = baseImposableAvecScop - isAvecScop;
     
     // Étape 4: Répartition du résultat net (et non du résultat fiscal)
     const montantParticipation = resultatNetAvecScop * (pourcentageParticipation / 100);
