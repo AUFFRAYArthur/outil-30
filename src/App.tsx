@@ -96,39 +96,56 @@ function App() {
     };
 
     // Scénario AVEC SCOP - Algorithme itératif
-    // Variables d'entrée pour l'algorithme itératif
-    const baseInitiale = resultatFiscal + cet; // Base imposable initiale incluant CET
+    // Calcul SCOP selon la formule: Participation = Résultat Net Après IS × Taux Participation
     const tauxParticipation = pourcentageParticipation / 100;
     const tauxReserves = pourcentageReserves / 100;
     const tauxDividendes = inputs.pourcentageDividendes / 100;
     
-    // Calcul direct avec équivalence Déduction Participation = Participation Salariés
-    // Formule: P = (RF + CET - R × min(r, p)) × p / (1 + p × t)
-    // où P = participation, RF = résultat fiscal, R = base, r = taux réserves, p = taux participation, t = taux IS
+    // Base imposable initiale
+    const baseImposableAvantDeductions = resultatFiscal + cet;
     
-    const deductionReservesTheorique = baseInitiale * tauxReserves;
-    const deductionReservesPlafonnee = Math.min(deductionReservesTheorique, baseInitiale * tauxParticipation);
+    // Calcul itératif pour convergence
+    let deductionParticipation = 0;
+    let deductionReserves = 0;
+    let isAvecScop = 0;
+    let resultatNetAvecScop = 0;
+    let montantParticipation = 0;
     
-    // Calcul de la participation avec équivalence garantie
-    const denominateur = 1 + tauxParticipation * tauxISDecimal;
-    const numerateur = (resultatFiscal + cet - deductionReservesPlafonnee) * tauxParticipation;
-    const montantParticipation = numerateur / denominateur;
+    // Itération pour convergence (max 10 itérations)
+    for (let i = 0; i < 10; i++) {
+      // Calcul des déductions fiscales
+      deductionParticipation = baseImposableAvantDeductions * tauxParticipation;
+      deductionReserves = Math.min(
+        baseImposableAvantDeductions * tauxReserves,
+        deductionParticipation
+      );
+      
+      // Base imposable après déductions
+      const baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
+      
+      // Calcul de l'IS
+      isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
+      
+      // Résultat net après IS
+      resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
+      
+      // Participation selon la formule spécifiée
+      const nouvelleParticipation = resultatNetAvecScop * tauxParticipation;
+      
+      // Test de convergence
+      if (Math.abs(nouvelleParticipation - montantParticipation) < 0.01) {
+        montantParticipation = nouvelleParticipation;
+        break;
+      }
+      
+      montantParticipation = nouvelleParticipation;
+      
+      // Ajustement de la base pour la prochaine itération
+      // La déduction participation doit égaler la participation calculée
+      deductionParticipation = montantParticipation;
+    }
     
-    // Déduction Participation = Participation Salariés (équivalence exacte)
-    const deductionParticipation = montantParticipation;
-    
-    // Recalcul de la déduction réserves avec la nouvelle base
-    const baseImposableAvantDeductions = baseInitiale;
-    const deductionReserves = Math.min(baseImposableAvantDeductions * tauxReserves, deductionParticipation);
-    
-    // Calcul de l'IS
-    const baseImposableAvecScop = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
-    const isAvecScop = Math.max(0, baseImposableAvecScop * tauxISDecimal);
-    
-    // Résultat net après IS (contrainte respectée)
-    const resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
-    
-    // Répartition du résultat net
+    // Répartition finale du résultat net
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
     const montantDividendesFinal = resultatNetAvecScop * tauxDividendes;
     
