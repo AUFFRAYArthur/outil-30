@@ -1,10 +1,9 @@
 import React from 'react';
 import Card from './Card';
-import { TrendingUp, FileDown } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 interface ResultsDisplayProps {
   results: any;
-  onExportPDF: () => void;
 }
 
 const formatCurrency = (value: number) => {
@@ -12,7 +11,7 @@ const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
 };
 
-const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF }) => {
+const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
   const { sansScop, avecScop, economies } = results;
 
   const ResultRow: React.FC<{ label: string, sansScopValue: number | string, avecScopValue: number | string, isCurrency?: boolean, isBold?: boolean, isSubtle?: boolean, isPositive?: boolean, isNegative?: boolean, indent?: boolean }> = 
@@ -38,15 +37,8 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF })
 
   return (
     <Card className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Résultats Comparatifs</h2>
-        <button
-          onClick={onExportPDF}
-          className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-        >
-          <FileDown size={18} />
-          <span>Exporter en PDF</span>
-        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

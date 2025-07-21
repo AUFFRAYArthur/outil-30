@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import SimulatorForm from './components/SimulatorForm';
 import ResultsDisplay from './components/ResultsDisplay';
 import ChartDisplay from './components/ChartDisplay';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, Lightbulb, Printer, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -24,6 +24,7 @@ function App() {
   });
 
   const resultsRef = useRef(null);
+  const [showNotice, setShowNotice] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -141,42 +142,68 @@ function App() {
     setResults({ sansScop, avecScop, economies });
   }, [inputs]);
 
-  const exportPDF = () => {
-    const input = resultsRef.current;
-    if (input) {
-      html2canvas(input, { scale: 2 }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        const ratio = canvasWidth / canvasHeight;
-        const width = pdfWidth - 20;
-        const height = width / ratio;
-        
-        let finalHeight = height;
-        if (height > pdfHeight - 20) {
-            finalHeight = pdfHeight - 20;
-        }
-
-        pdf.text("Rapport de Simulation - Avantages Fiscaux SCOP", 10, 10);
-        pdf.addImage(imgData, 'PNG', 10, 20, width, finalHeight);
-        pdf.save(`simulation-scop-${new Date().toISOString().slice(0,10)}.pdf`);
-      });
-    }
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center space-x-3">
-          <Briefcase className="h-8 w-8 text-blue-600" />
+          <div className="flex items-center space-x-3 flex-1">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Simulateur d'Avantages Fiscaux SCOP</h1>
             <p className="text-sm text-gray-500">Évaluez l'impact du statut SCOP sur la rentabilité de votre entreprise.</p>
           </div>
+          
+          <div className="flex items-center space-x-4 relative">
+            {/* Bouton Notice */}
+            <div className="relative">
+              <button
+                onMouseEnter={() => setShowNotice(true)}
+                className="flex flex-col items-center space-y-1 p-2 rounded-lg hover:bg-gray-100 transition-colors group"
+              >
+                <Lightbulb className="h-6 w-6 text-yellow-500 group-hover:text-yellow-600" />
+                <span className="text-xs text-gray-500">notice</span>
+              </button>
+              
+              {showNotice && (
+                <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50">
+                  <button
+                    onClick={() => setShowNotice(false)}
+                    className="absolute top-2 left-2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                  <h3 className="font-semibold text-gray-800 mb-2 ml-6">Notice d'utilisation</h3>
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <p><strong>Objectif :</strong> Ce simulateur compare les avantages fiscaux entre une société classique et une SCOP.</p>
+                    <p><strong>Affectation du résultat SCOP :</strong> La répartition (participation, réserves, dividendes) s'applique sur le résultat net après IS, conformément aux règles comptables SCOP.</p>
+                    <p><strong>Déductions fiscales :</strong> La participation (min. 25%) et les réserves impartageables (min. 16%) sont déductibles fiscalement, optimisant l'impôt sur les sociétés.</p>
+                    <p><strong>Exonération CET :</strong> Les SCOP bénéficient d'une exonération de Contribution Économique Territoriale, générant des économies supplémentaires.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Bouton Impression */}
+            <button
+              onClick={handlePrint}
+              className="flex flex-col items-center space-y-1 p-2 rounded-lg hover:bg-gray-100 transition-colors group"
+            >
+              <Printer className="h-6 w-6 text-gray-600 group-hover:text-gray-800" />
+              <span className="text-xs text-gray-500">imprimer</span>
+            </button>
+          </div>
         </div>
+        
+        {/* Overlay pour fermer la notice en cliquant à l'extérieur */}
+        {showNotice && (
+          <div 
+            className="fixed inset-0 z-40" 
+            onClick={() => setShowNotice(false)}
+          />
+        )}
       </header>
 
       <main className="container mx-auto p-4 md:p-8">
@@ -189,7 +216,7 @@ function App() {
             />
           </div>
           <div className="lg:col-span-3 space-y-8" ref={resultsRef}>
-            <ResultsDisplay results={results} onExportPDF={exportPDF} />
+            <ResultsDisplay results={results} />
             {}
           </div>
         </div>
