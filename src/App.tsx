@@ -124,11 +124,9 @@ function App() {
       // Calcul de la nouvelle déduction participation basée sur le résultat net
       const nouvelleDeductionParticipation = resultatNetAvecScop * tauxParticipation;
       
-      // Calcul des déductions fiscales
-      deductionReserves = Math.min(
-        baseImposableAvantDeductions * tauxReserves,
-        nouvelleDeductionParticipation
-      );
+      // Calcul de la déduction réserves : montant réserves limité au montant participation
+      const montantReserves = resultatNetAvecScop * tauxReserves;
+      deductionReserves = Math.min(montantReserves, nouvelleDeductionParticipation);
       
       // Test de convergence
       if (Math.abs(nouvelleDeductionParticipation - deductionParticipation) < 0.01) {
