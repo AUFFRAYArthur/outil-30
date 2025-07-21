@@ -140,12 +140,14 @@ function App() {
       deductionParticipation = nouvelleDeductionParticipation;
     }
     
-    // Calcul final de la participation (égale à la déduction)
     // Recalcul final du résultat net après IS avec l'IS convergé
     resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
     
-    // Calcul final de la participation sur le résultat net après IS
+    // Calcul final de la participation sur le résultat net après IS (identique à la déduction)
     montantParticipation = resultatNetAvecScop * tauxParticipation;
+    
+    // La déduction participation doit être strictement égale au montant participation
+    deductionParticipation = montantParticipation;
     
     // Répartition finale du résultat net
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
