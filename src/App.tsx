@@ -141,6 +141,10 @@ function App() {
     }
     
     // Calcul final de la participation (égale à la déduction)
+    // Recalcul final du résultat net après IS avec l'IS convergé
+    resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
+    
+    // Calcul final de la participation sur le résultat net après IS
     montantParticipation = resultatNetAvecScop * tauxParticipation;
     
     // Répartition finale du résultat net
