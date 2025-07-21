@@ -85,6 +85,8 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF })
           <tbody className="bg-white">
             <ResultRow label="Résultat fiscal avant affectation" sansScopValue={sansScop.resultatFiscal} avecScopValue={avecScop.resultatFiscal} isBold />
             
+            <ResultRow label="Contribution Économique (CET)" sansScopValue={sansScop.cet} avecScopValue={avecScop.cet} isNegative />
+            
             <tr className="bg-gray-50"><td colSpan={3} className="py-1 px-4 text-xs font-semibold text-gray-500">TRAITEMENT FISCAL SCOP</td></tr>
             <ResultRow label="Base imposable avant déductions" sansScopValue={sansScop.baseImposable} avecScopValue={avecScop.baseImposableAvantDeductions} indent />
             
@@ -99,7 +101,6 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results, onExportPDF })
 
             <ResultRow label="Base imposable à l'IS" sansScopValue={sansScop.baseImposable} avecScopValue={avecScop.baseImposable} isBold />
             <ResultRow label="Impôt sur les Sociétés (IS)" sansScopValue={sansScop.is} avecScopValue={avecScop.is} isNegative />
-            <ResultRow label="Contribution Économique (CET)" sansScopValue={sansScop.cet} avecScopValue={avecScop.cet} isNegative />
             
             <tr className="bg-gray-100 font-bold">
               <td className="py-3 px-4 text-sm text-gray-800">Coût Fiscal Total</td>
