@@ -48,11 +48,14 @@ const AllocationSliders: React.FC<AllocationSlidersProps> = ({ participation, re
         value={dividendes}
         onChange={handleChange}
         min={0}
-        max={100 - 25 - 16}
+        max={33.33}
         step={1}
         unit="%"
         name="pourcentageDividendes"
       />
+      <p className="text-sm text-gray-500 mt-2">
+        <strong>Note :</strong> La rémunération du capital (dividendes) ne peut pas par principe être supérieure ni à la participation (min. 25%), ni aux réserves impartageables (min. 16%). Maximum autorisé : 33,33%.
+      </p>
     </div>
   );
 };
