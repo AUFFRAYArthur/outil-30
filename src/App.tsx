@@ -114,37 +114,35 @@ function App() {
     
     // Itération pour convergence (max 10 itérations)
     for (let i = 0; i < 10; i++) {
-      // Calcul des déductions fiscales
-      deductionParticipation = baseImposableAvantDeductions * tauxParticipation;
-      deductionReserves = Math.min(
-        baseImposableAvantDeductions * tauxReserves,
-        deductionParticipation
-      );
-      
-      // Base imposable après déductions
+      // Calcul de l'IS avec déductions actuelles
       baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
-      
-      // Calcul de l'IS
       isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
       
       // Résultat net après IS
-      resultatNetAvecScop = baseImposableAvantDeductions - isAvecScop;
+      resultatNetAvecScop = resultatFiscal - isAvecScop;
       
-      // Participation selon la formule spécifiée
-      const nouvelleParticipation = resultatNetAvecScop * tauxParticipation;
+      // Calcul de la nouvelle déduction participation basée sur le résultat net
+      const nouvelleDeductionParticipation = resultatNetAvecScop * tauxParticipation;
+      
+      // Calcul des déductions fiscales
+      deductionReserves = Math.min(
+        baseImposableAvantDeductions * tauxReserves,
+        nouvelleDeductionParticipation
+      );
       
       // Test de convergence
-      if (Math.abs(nouvelleParticipation - montantParticipation) < 0.01) {
-        montantParticipation = nouvelleParticipation;
+      if (Math.abs(nouvelleDeductionParticipation - deductionParticipation) < 0.01) {
+        deductionParticipation = nouvelleDeductionParticipation;
         break;
       }
       
       montantParticipation = nouvelleParticipation;
-      
-      // Ajustement de la base pour la prochaine itération
-      // La déduction participation doit égaler la participation calculée
-      deductionParticipation = montantParticipation;
+      // Mise à jour pour la prochaine itération
+      deductionParticipation = nouvelleDeductionParticipation;
     }
+    
+    // Calcul final de la participation (égale à la déduction)
+    montantParticipation = deductionParticipation;
     
     // Répartition finale du résultat net
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
