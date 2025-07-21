@@ -151,6 +151,9 @@ function App() {
     const montantReservesFinal = resultatNetAvecScop * tauxReserves;
     const montantDividendesFinal = resultatNetAvecScop * tauxDividendes;
     
+    // Recalcul final de la déduction réserves avec le montant final de participation
+    deductionReserves = Math.min(montantReservesFinal, montantParticipation);
+    
     const coutFiscalTotalAvecScop = isAvecScop; // CET = 0 pour les SCOP
 
     const avecScop = {
