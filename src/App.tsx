@@ -154,6 +154,12 @@ function App() {
     // Recalcul final de la déduction réserves avec le montant final de participation
     deductionReserves = Math.min(montantReservesFinal, montantParticipation);
     
+    // Recalcul final de la base imposable à l'IS avec les déductions finales
+    baseImposableApresDeductions = baseImposableAvantDeductions - deductionParticipation - deductionReserves;
+    
+    // Recalcul final de l'IS avec la base imposable corrigée
+    isAvecScop = Math.max(0, baseImposableApresDeductions * tauxISDecimal);
+    
     const coutFiscalTotalAvecScop = isAvecScop; // CET = 0 pour les SCOP
 
     const avecScop = {
