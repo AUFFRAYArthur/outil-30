@@ -143,7 +143,45 @@ function App() {
   }, [inputs]);
 
   const handlePrint = () => {
-    window.print();
+    // Configuration optimisée pour l'impression PDF
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Simulateur SCOP - Résultats</title>
+            <style>
+              @page {
+                size: A4 landscape;
+                margin: 0.5in;
+              }
+              body {
+                font-family: system-ui, -apple-system, sans-serif;
+                margin: 0;
+                padding: 0;
+                transform: scale(0.75);
+                transform-origin: top left;
+                width: 133%;
+              }
+            </style>
+            <link href="/src/index.css" rel="stylesheet">
+          </head>
+          <body>
+            ${document.querySelector('main')?.outerHTML || ''}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    } else {
+      // Fallback vers l'impression standard
+      window.print();
+    }
   };
 
   return (
